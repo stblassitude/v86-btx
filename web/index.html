@@ -1,60 +1,44 @@
 <!doctype html>
-<title>BTX</title>
+<html>
 
-<script src="libv86.js"></script>
-<script>
-  "use strict";
-  window.onload = function() {
-    var websocket_uri;
-    if (window.location.protocol === "https:") {
-      websocket_uri = "wss:";
-    } else {
-      websocket_uri = "ws:";
-    }
-    websocket_uri += "//" + window.location.host;
-    websocket_uri += "/btxws";
+<head>
+  <title>BTX</title>
+  <link rel="stylesheet" type="text/css" href="btx.css">
+  <script src="libv86.js"></script>
+  <script src="btx.js"></script>
+</head>
 
-    var btxSocket = new WebSocket(websocket_uri)
-    btxSocket.binaryType = "arraybuffer";
-    var emulator = window.emulator = new V86Starter({
-      memory_size: 32 * 1024 * 1024,
-      vga_memory_size: 2 * 1024 * 1024,
-      screen_container: document.getElementById("screen_container"),
-      bios: {
-        url: "seabios.bin",
-      },
-      vga_bios: {
-        url: "vgabios.bin",
-      },
-      cdrom: {
-        url: "btx.iso",
-      },
-      autostart: true,
-    });
-    btxSocket.onopen = function() {
-      emulator.add_listener('serial2-output-char', function(c) {
-        var ab = new ArrayBuffer(1)
-        var abv = new Uint8Array(ab)
-        abv[0] = c.charCodeAt(0)
-        btxSocket.send(ab)
-        // console.log("sent " + c)
-      })
-    }
-    btxSocket.onmessage = function(event) {
-      var data = event.data
-      if (event.data instanceof ArrayBuffer) {
-        data = new Uint8Array(event.data)
-        emulator.serial_send_bytes(2, data)
-        // console.log("received " + data)
-      } else {
-        console.log("received data in unsupported format: " + data)
-      }
-    }
-  }
-</script>
-
-<!-- A minimal structure for the ScreenAdapter defined in browser/screen.js -->
-<div id="screen_container">
-  <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
-  <canvas style="display: none"></canvas>
-</div>
+<body>
+  <div id="btx-container">
+    <div id="screen_container">
+      <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+      <canvas style="display: none"></canvas>
+    </div>
+    <div id="keyboard">
+      <div class="keyboard-row">
+        <button id="keyboard-dial" type="button">&phone;</button>
+        <button id="keyboard-dct" type="button">&#x23ce;</button>
+      </div>
+      <div class="keyboard-row">
+        <button id="keyboard-1" type="button">1</button>
+        <button id="keyboard-2" type="button">2</button>
+        <button id="keyboard-3" type="button">3</button>
+      </div>
+      <div class="keyboard-row">
+        <button id="keyboard-4" type="button">4</button>
+        <button id="keyboard-5" type="button">5</button>
+        <button id="keyboard-6" type="button">6</button>
+      </div>
+      <div class="keyboard-row">
+        <button id="keyboard-7" type="button">7</button>
+        <button id="keyboard-8" type="button">8</button>
+        <button id="keyboard-9" type="button">9</button>
+      </div>
+      <div class="keyboard-row">
+        <button id="keyboard-ini" type="button">*</button>
+        <button id="keyboard-0" type="button">0</button>
+        <button id="keyboard-ter" type="button">#</button>
+      </div>
+    </div>
+  </div>
+</body>
