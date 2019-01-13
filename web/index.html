@@ -5,7 +5,16 @@
 <script>
   "use strict";
   window.onload = function() {
-    var btxSocket = new WebSocket('ws://127.0.0.1:8080/btxws')
+    var websocket_uri;
+    if (window.location.protocol === "https:") {
+      websocket_uri = "wss:";
+    } else {
+      websocket_uri = "ws:";
+    }
+    websocket_uri += "//" + window.location.host;
+    websocket_uri += "/btxws";
+
+    var btxSocket = new WebSocket(websocket_uri)
     btxSocket.binaryType = "arraybuffer";
     var emulator = window.emulator = new V86Starter({
       memory_size: 32 * 1024 * 1024,
@@ -22,13 +31,15 @@
       },
       autostart: true,
     });
-    emulator.add_listener('serial2-output-char', function(c) {
-      var ab = new ArrayBuffer(1)
-      var abv = new Uint8Array(ab)
-      abv[0] = c.charCodeAt(0)
-      btxSocket.send(ab)
-      // console.log("sent " + c)
-    })
+    btxSocket.onopen = function() {
+      emulator.add_listener('serial2-output-char', function(c) {
+        var ab = new ArrayBuffer(1)
+        var abv = new Uint8Array(ab)
+        abv[0] = c.charCodeAt(0)
+        btxSocket.send(ab)
+        // console.log("sent " + c)
+      })
+    }
     btxSocket.onmessage = function(event) {
       var data = event.data
       if (event.data instanceof ArrayBuffer) {
