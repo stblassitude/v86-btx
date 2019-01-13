@@ -1,3 +1,5 @@
+.venv
+__pycache__
 build
-btx.iso
 web/*.bin
+web/*.iso

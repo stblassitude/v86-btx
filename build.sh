@@ -22,11 +22,11 @@ if [ ! -f build/pconline.iso ]; then
   wget -o build/pconline.iso 'https://www.pagetable.com/docs/btx/decoder/PC%20online%201&1%20BTX-COM%20Version%204.34.img'
 fi
 
-# tar="$(which bsdtar)"
-# if [ -z "${tar}" ]; then
-#   tar="which tar"
-# fi
-# ${tar} --help | grep -q 'bsdtar' || errmsg "${tar} does not seem to be bsdtar (supporting extracting from ISO images)"
+for i in seabios.bin vgabios.bin; do
+  if [ ! -f web/$i ]; then
+    wget -o web/$i https://copy.sh/v86/bios/$i
+  fi
+done
 
 rm -rf build/btx build/floppy build/freedos build/pconline
 mkdir -p build/freedos
@@ -63,6 +63,6 @@ cp files/ISOLINUX.CFG build/btx/ISOLINUX/ISOLINUX.CFG
 mkdir -p build/btx/pconline
 cp -r build/pconline build/btx/
 
-xorriso -as mkisofs -o btx.iso \
+xorriso -as mkisofs -o web/btx.iso \
         -c ISOLINUX/boot.cat -b ISOLINUX/ISOLINUX.BIN -no-emul-boot \
         -boot-load-size 4 -boot-info-table build/btx
