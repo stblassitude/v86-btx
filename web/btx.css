@@ -18,3 +18,9 @@
 button#keyboard-dial, button#keyboard-dct {
   width: 3em;
 }
+
+.key {
+  border: 1px solid grey;
+  border-radius: 0.3em;
+  padding: 0 0.5em;
+}

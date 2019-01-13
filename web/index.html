@@ -3,12 +3,14 @@
 
 <head>
   <title>BTX</title>
+  <meta charset="utf-8">
   <link rel="stylesheet" type="text/css" href="btx.css">
   <script src="libv86.js"></script>
   <script src="btx.js"></script>
 </head>
 
 <body>
+  <h1>Bildschirmtext</h1>
   <div id="btx-container">
     <div id="screen_container">
       <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
@@ -40,5 +42,30 @@
         <button id="keyboard-ter" type="button">#</button>
       </div>
     </div>
+  </div>
+  <div>
+    <h2>Bedienung</h2>
+    <p>Durch Drücken von <span class="key">F10</span> oder
+      Klick auf die Anwahltaste <span class="key">&phone;</span> wird die
+      Verbindung zum BTX-System hergestellt.</p>
+    <p>Zum Navigieren zwischen den BTX-Seiten wird die ein- oder zweistellige
+      Nummer hinter einem Menüeintrag eingegeben, oder per
+      <span class="key">*</span>Seitennummer<span class="key">#</span> eine
+      Seite direkt angesteuert.</p>
+    <p>Wichtig: <span class="key">*</span> und
+      <span class="key">#</span> sind Sondertasten; im BTX-Decoder muss dafür
+      <span class="key">F1</span> oder <span class="key">F2</span>
+      gedrückt werden. Natürlich können die entsprechenden Tasten auf der
+      Bildschirmtastatur geklickt werden.</p>
+    <h2>Die Technik</h2>
+    <p>Diese Seite enthält einen in
+      <a href="https://github.com/copy/v86">JavaScript geschriebenen
+        PC-Emulator</a>, in dem ein historischer Bildschirmtext-Decoder
+      (PC online 1&1 BTX-COM Version 4.34) läuft.</p>
+    <p>Über eine Websocket-Verbindung zum Server kommuniziert der Decoder mit
+      der <a href="https://github.com/bildschirmtext/bildschirmtext">Emulation
+        der BTX-Host-Software</a>.</p>
+    <p>Diese Seite inkl. des ISO-Images, das im Emulator läuft, findet sich
+      unter <a href="https://github.com/stblassitude/v86-btx">github.com/stblassitude/v86-btx</a>.
   </div>
 </body>
