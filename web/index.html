@@ -22,25 +22,22 @@
       },
       autostart: true,
     });
-    emulator.add_listener('serial0-output-char', function(c) {
+    emulator.add_listener('serial2-output-char', function(c) {
       var ab = new ArrayBuffer(1)
       var abv = new Uint8Array(ab)
-      abv[0] = c
+      abv[0] = c.charCodeAt(0)
       btxSocket.send(ab)
-      console.log("sent " + c)
+      // console.log("sent " + c)
     })
     btxSocket.onmessage = function(event) {
       var data = event.data
       if (event.data instanceof ArrayBuffer) {
-        data = ""
-        for (var i = 0; i < event.data.byteLength; i++) {
-          var b = event.data[i]
-          var c = String.fromCharCode(event.data[i])
-          data += String.fromCharCode(event.data[i])
-        }
+        data = new Uint8Array(event.data)
+        emulator.serial_send_bytes(2, data)
+        // console.log("received " + data)
+      } else {
+        console.log("received data in unsupported format: " + data)
       }
-      emulator.serial0_send(data)
-      console.log("received " + data)
     }
   }
 </script>
