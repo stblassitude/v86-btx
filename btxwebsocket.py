@@ -24,21 +24,28 @@ async def websocket_handler(request):
         while True:
             try:
                 data = await reader.read(64)
+                if len(data) == 0:
+                    print('socket connection closed')
+                    break
                 await ws.send_bytes(data)
             except ConnectionError:
                 await ws.close()
                 return
 
-    asyncio.get_event_loop().create_task(server_to_websocket())
+    task = asyncio.get_event_loop().create_task(server_to_websocket())
 
     async for msg in ws:
         if msg.type == aiohttp.WSMsgType.BINARY:
             try:
                 writer.write(msg.data)
+                await writer.drain()
             except ConnectionError:
                 await ws.close()
                 writer.close()
         elif msg.type == aiohttp.WSMsgType.ERROR:
+            if task:
+                task.cancel()
+                task = None
             writer.close()
             print('ws connection closed with exception %s' %
                   ws.exception())
