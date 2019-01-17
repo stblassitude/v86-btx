@@ -24,13 +24,13 @@ async def websocket_handler(request):
         while True:
             try:
                 data = await reader.read(64)
-                if len(data) == 0:
+                if not data:
                     print('socket connection closed')
                     break
                 await ws.send_bytes(data)
             except ConnectionError:
                 await ws.close()
-                return
+                break
 
     task = asyncio.get_event_loop().create_task(server_to_websocket())
 
