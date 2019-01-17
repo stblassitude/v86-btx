@@ -34,6 +34,8 @@ mkdir -p build/freedos
 
 mkdir -p build/floppy/DOS/BIN
 mkdir -p build/floppy/DOS/NLS
+# 7z e build/freedos/BASE/KERNEL.ZIP BIN/KERNL86.SYS -obuild/floppy
+# mv build/floppy/KERNL86.SYS build/floppy/KERNEL.SYS
 7z e build/freedos/BASE/COMMAND.ZIP BIN/COMMAND.COM -obuild/floppy/DOS/BIN
 7z e build/freedos/BASE/DEVLOAD.ZIP BIN/DEVLOAD.COM -obuild/floppy/DOS/BIN
 7z e build/freedos/BASE/HIMEMX.ZIP BIN/HIMEMX.EXE -obuild/floppy/DOS/BIN
@@ -46,23 +48,14 @@ mkdir -p build/floppy/DOS/NLS
 7z e build/freedos/BASE/SHSUCDX.ZIP BIN/SHSUCDX.COM -obuild/floppy/DOS/BIN
 7z e build/freedos/UTIL/UDVD2.ZIP BIN/UDVD2.SYS -obuild/floppy/DOS/BIN
 
-rm -rf build/btx
-mkdir -p build/btx
-cp -r build/freedos/ISOLINUX build/btx
-
 7z x build/pconline.iso -obuild/pconline
 
-mdeltree -i build/btx/ISOLINUX/FDBOOT.img ::FDSETUP SETUP.BAT
-mcopy -i build/btx/ISOLINUX/FDBOOT.img -s build/floppy/* ::
-mdir -i build/btx/ISOLINUX/FDBOOT.img
-mcopy -i build/btx/ISOLINUX/FDBOOT.img -t -Do files/FDCONFIG.SYS ::
-mcopy -i build/btx/ISOLINUX/FDBOOT.img -t -Do files/AUTOEXEC.BAT ::
-
-
-cp files/ISOLINUX.CFG build/btx/ISOLINUX/ISOLINUX.CFG
-mkdir -p build/btx/pconline
-cp -r build/pconline build/btx/
-
-xorriso -as mkisofs -o web/btx.iso \
-        -c ISOLINUX/boot.cat -b ISOLINUX/ISOLINUX.BIN -no-emul-boot \
-        -boot-load-size 4 -boot-info-table build/btx
+cp build/freedos/ISOLINUX/FDBOOT.img build/btx.img
+mdeltree -i build/btx.img ::FDSETUP SETUP.BAT
+mcopy -i build/btx.img -t -Do files/FDCONFIG.SYS ::
+mcopy -i build/btx.img -t -Do files/AUTOEXEC.BAT ::
+mcopy -i build/btx.img -s build/floppy/* ::
+mcopy -i build/btx.img -s build/pconline/BTX1.EXE build/pconline/BTX1.FNT \
+  build/pconline/EGAVGA.BGI build/pconline/LITT.CHR ::
+mcopy -i build/btx.img -s files/BTX1.PRM ::
+cp build/btx.img web/

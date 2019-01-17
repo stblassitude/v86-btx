@@ -23,7 +23,7 @@ pip install -r requirements.txt
 
 Copy the files in `web/` to a web server. To test quickly, you can run
 ```
-python -m SimpleHTTPServer 8000
+./btxwebsocket.py
 ```
 
 and access the files through http://localhost:8000/web/

@@ -12,8 +12,8 @@ window.onload = function() {
   var btxSocket = new WebSocket(websocket_uri)
   btxSocket.binaryType = "arraybuffer";
   var emulator = window.emulator = new V86Starter({
-    memory_size: 32 * 1024 * 1024,
-    vga_memory_size: 2 * 1024 * 1024,
+    memory_size: 2 * 1024 * 1024,
+    vga_memory_size: 1 * 1024 * 1024,
     screen_container: document.getElementById("screen_container"),
     bios: {
       url: "seabios.bin",
@@ -21,13 +21,13 @@ window.onload = function() {
     vga_bios: {
       url: "vgabios.bin",
     },
-    cdrom: {
-      url: "btx.iso",
+    fda: {
+      url: "btx.img",
     },
     autostart: true,
   });
   btxSocket.onopen = function() {
-    emulator.add_listener('serial2-output-char', function(c) {
+    emulator.add_listener('serial0-output-char', function(c) {
       var ab = new ArrayBuffer(1)
       var abv = new Uint8Array(ab)
       abv[0] = c.charCodeAt(0)
@@ -39,7 +39,7 @@ window.onload = function() {
     var data = event.data
     if (event.data instanceof ArrayBuffer) {
       data = new Uint8Array(event.data)
-      emulator.serial_send_bytes(2, data)
+      emulator.serial_send_bytes(0, data)
       // console.log("received " + data)
     } else {
       console.log("received data in unsupported format: " + data)
